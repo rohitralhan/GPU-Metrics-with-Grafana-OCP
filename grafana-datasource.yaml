@@ -1,0 +1,42 @@
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: grafana-ds
+  namespace: grafana-dashboard
+spec:
+  datasource:
+    access: proxy
+    editable: true
+    isDefault: true
+    jsonData:
+      httpHeaderName1: Authorization
+      timeInterval: 5s
+      tlsAuth: false
+      tlsAuthWithCACert: true
+      tlsSkipVerify: false
+    name: prometheus
+    secureJsonData:
+      httpHeaderValue1: 'Bearer ${prometheus_token}'
+      tlsCACert: '${ca.crt}'
+    type: prometheus
+    url: '${prometheus_svc_url}'
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana-a
+  resyncPeriod: 5m
+  valuesFrom:
+    - targetPath: secureJsonData.httpHeaderValue1
+      valueFrom:
+        secretKeyRef:
+          key: prometheus_token
+          name: prometheus-secret
+    - targetPath: secureJsonData.tlsCACert
+      valueFrom:
+        secretKeyRef:
+          key: ca.crt
+          name: prometheus-secret
+    - targetPath: url
+      valueFrom:
+        secretKeyRef:
+          key: prometheus_svc_url
+          name: prometheus-secret
