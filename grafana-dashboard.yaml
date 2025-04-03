@@ -1,0 +1,13 @@
+kind: GrafanaDashboard
+apiVersion: grafana.integreatly.org/v1beta1
+metadata:
+  name: grafana-nvidia-dashboard
+  namespace: grafana-operator
+spec:
+  folder: Nvidia-Dcgm-Metrics
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana-a
+  configMapRef:
+    key: grafana-dashboard.json
+    name: grafana-dashboard-config
