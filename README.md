@@ -26,13 +26,13 @@ Before setting up the Grafana dashboard, ensure the following prerequisites are 
 -   **Prometheus Operator** installed and publishing DCGM metrics
     
 ## Procedure
-1. Ensure that the NVIDIA GPU operator is installed and configured and the DCGM Prometheus exporter pods are up and running
-2. Install the Grafana Operator
-3. Create Grafana Instance
-4. Create Prometheus Datasource
-5. Create Grafana Dashboard
-6. Load the GPU
-7.  Visualise!
+1. Configure DCGM Metrics & Ensure DCGM Prometheus exporter pods are up and running
+3. Install the Grafana Operator
+4. Create Grafana Instance
+5. Create Prometheus Datasource
+6. Create Grafana Dashboard
+7. Load the GPU
+8.  Visualise!
 
 ## Step 1: DCGM Config
 The default set of metrics exposed by the NVIDIA DCGM Exporter does not provide all the necessary data for rendering the required gauges on the dashboard. To address this, the DCGM Exporter is configured to expose a customized set of metrics, ensuring that the dashboard has access to critical GPU performance data.
@@ -66,6 +66,10 @@ oc apply -f https://raw.githubusercontent.com/rohitralhan/GPU-Metrics-with-Grafa
 ```
 oc patch clusterpolicies.nvidia.com gpu-cluster-policy --patch '{ "spec": { "dcgmExporter": { "config": { "name": "console-plugin-nvidia-gpu" } } } }' --type=merge
 ```
+4. Run `oc get pods -n nvidia-gpu-operator` make sure the DCGM pods are up and running
+Sample Output
+
+![enter image description here](https://raw.githubusercontent.com/rohitralhan/GPU-Metrics-with-Grafana-OCP/refs/heads/main/images/dcgm-pods.png)
 
 ## Step 2: Deploy and Configure the Grafana Operator
 
