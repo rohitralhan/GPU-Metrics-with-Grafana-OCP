@@ -31,7 +31,8 @@ Before setting up the Grafana dashboard, ensure the following prerequisites are 
 3. Create Grafana Instance
 4. Create Prometheus Datasource
 5. Create Grafana Dashboard
-6.  Visualise!
+6. Load the GPU
+7.  Visualise!
 
 ## Step 1: DCGM Config
 The default set of metrics exposed by the NVIDIA DCGM Exporter does not provide all the necessary data for rendering the required gauges on the dashboard. To address this, the DCGM Exporter is configured to expose a customized set of metrics, ensuring that the dashboard has access to critical GPU performance data.
@@ -225,6 +226,26 @@ Assuming that Prometheus is installed in the **`openshift-monitoring`** namespac
     oc get routes grafana-a-route -o jsonpath='{"https://"}{.spec.host}{"\n"}' -n grafana-dashboard
 	```
 
+If everything goes well the dashboard should look like as shown below in the screenshot:
+
+![enter image description here](https://raw.githubusercontent.com/rohitralhan/GPU-Metrics-with-Grafana-OCP/refs/heads/main/images/grafana-dashboard.png)
+
+
+## Step 5: Generating a load
+Now we need to run some GPU workloads. For this purpose, DCGM includes a CUDA load generator called **`dcgmproftester`**. It can be used to generate deterministic CUDA workloads for reading and validating GPU metrics.
+1. Go to **`Workloads --> Pods`** the **`nvidia-gpu-operator`** namespace
+2. Click on the **`nvidia-dcgm-*****`** pod and navigate to the **`Terminal`** tab.
+3. Run the command **`/usr/bin/dcgmproftester12 --no-dcgm-validation -t 1004 -d 40`**. `-t` is a comma-separated list of profiling fields and`-d` is the duration of the test.
+
+![enter image description here](https://raw.githubusercontent.com/rohitralhan/GPU-Metrics-with-Grafana-OCP/refs/heads/main/images/dcgmproftester12.png)
+
 ## Conclusion
 
 By following this guide, you have successfully installed and configured the Grafana Operator on Red Hat OpenShift to visualize NVIDIA DCGM metrics. This setup provides real-time insights into GPU performance and allows for further customization based on monitoring needs.
+
+## References
+
+1.  [OpenShift Documentation](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/monitoring/about-openshift-container-platform-monitoring#using-node-selectors-to-move-monitoring-components_key-concepts)
+2.  [Prometheus](https://prometheus.io/docs/introduction/overview/)
+3. [Grafana](https://grafana.com/docs/)
+4. [NVIDIA DCGM](https://docs.nvidia.com/datacenter/dcgm/latest/user-guide/index.html)
