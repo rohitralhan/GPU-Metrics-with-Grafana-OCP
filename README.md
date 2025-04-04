@@ -1,4 +1,4 @@
-# GPU Metrics Visualization on Red Hat OpenShift 
+# Visualizing GPU Metrics on Red Hat OpenShift 
 
 ![Title](https://raw.githubusercontent.com/rohitralhan/GPU-Metrics-with-Grafana-OCP/refs/heads/main/images/main.png)
 
