@@ -1,5 +1,8 @@
 # GPU Metrics visualization on Red Hat OpenShift 
 
+![Title](https://raw.githubusercontent.com/rohitralhan/GPU-Metrics-with-Grafana-OCP/refs/heads/main/images/main.png)
+
+
 ## Introduction
 
 In this post, we will look at how to visualize GPU-related metrics on Red Hat OpenShift using Grafana Prometheus and the NVIDIA DCGM Exporter. This guide provides details on setting up a Grafana dashboard on Red Hat OpenShift to ingest NVIDIA DCGM metrics via Prometheus using the Grafana Operator.
@@ -10,6 +13,8 @@ Prometheus is an open-source monitoring solution that collects and processes met
 
 Grafana is a powerful visualization tool that enables real-time monitoring of metrics. When running GPU workloads on Red Hat OpenShift, it is critical to monitor NVIDIA GPU metrics to ensure optimal performance. Grafana allows users to create interactive and real-time dashboards. By integrating Prometheus with Grafana, we can effectively monitor and analyze NVIDIA GPU performance.
 
+![enter image description here](https://raw.githubusercontent.com/rohitralhan/GPU-Metrics-with-Grafana-OCP/refs/heads/main/images/basic-architecture.png)
+<p align=center>High Level Architecture</p>
 
 ## Prerequisites
 
@@ -31,28 +36,8 @@ Before setting up the Grafana dashboard, ensure the following prerequisites are 
 ## Step 1: DCGM Config
 The default set of metrics exposed by the NVIDIA DCGM Exporter does not provide all the necessary data for rendering the required gauges on the dashboard. To address this, the DCGM Exporter is configured to expose a customized set of metrics, ensuring that the dashboard has access to critical GPU performance data.
 
-1. Create the below config map in the `nvidia-gpu-operator` namespace:
+1. We will be using the some of the below metrics in our dashboard, for a complete list of metrics refer to the [NVIDIA DCGM documentation](https://docs.nvidia.com/datacenter/dcgm/latest/user-guide/index.html)
 ```
-kind: ConfigMap
-apiVersion: v1
-metadata:
-  name: console-plugin-nvidia-gpu
-  namespace: nvidia-gpu-operator
-  labels:
-    app.kubernetes.io/component: console-plugin-nvidia-gpu
-    app.kubernetes.io/instance: console-plugin-nvidia-gpu
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/name: console-plugin-nvidia-gpu
-    app.kubernetes.io/part-of: console-plugin-nvidia-gpu
-    app.kubernetes.io/version: latest
-    helm.sh/chart: console-plugin-nvidia-gpu-0.2.5
-  annotations:
-    meta.helm.sh/release-name: console-plugin-nvidia-gpu
-    meta.helm.sh/release-namespace: nvidia-gpu-operator
-data:
-  dcgm-metrics.csv: |
-    DCGM_FI_DEV_FB_USED, gauge, Framebuffer memory used (in MiB).
-    DCGM_FI_PROF_PIPE_TENSOR_ACTIVE, gauge, Ratio of cycles the tensor (HMMA) pipe is active.
     DCGM_FI_DEV_GPU_UTIL, gauge, GPU utilization (in %).
     DCGM_FI_PROF_GR_ENGINE_ACTIVE, gauge, gpu utilization.
     DCGM_FI_DEV_MEM_COPY_UTIL, gauge, mem utilization.
@@ -72,7 +57,7 @@ data:
     DCGM_FI_DEV_COUNT, counter, Number of Devices on the node.
     DCGM_FI_DEV_TOTAL_ENERGY_CONSUMPTION, counter, Total energy consumption since boot (in mJ).
 ```
-2. Apply the configuration 
+2. Apply the configuration, the yaml file contains the config map for the dcgm metrics.
 ```
 oc apply -f https://raw.githubusercontent.com/rohitralhan/GPU-Metrics-with-Grafana-OCP/refs/heads/main/dcgm-console-plugin-config.yaml
 ```
