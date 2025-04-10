@@ -1,11 +1,11 @@
 # Visualize GPU Metrics on Red Hat OpenShift 
 
-![Title](https://raw.githubusercontent.com/rohitralhan/GPU-Metrics-with-Grafana-OCP/refs/heads/main/images/main.png)
+![Title Image](https://raw.githubusercontent.com/rohitralhan/GPU-Metrics-with-Grafana-OCP/refs/heads/main/images/main.png)
 
 
 ## Introduction
 
-In this post, we will look at how to visualize GPU-related metrics on Red Hat OpenShift using Grafana Prometheus and the NVIDIA DCGM Exporter. This guide provides details on setting up a Grafana dashboard on Red Hat OpenShift to ingest NVIDIA DCGM metrics via Prometheus using the Grafana Operator.
+In this post, we will look at how to visualize GPU-related metrics on Red Hat OpenShift using Prometheus, Grafana and the NVIDIA DCGM Exporter. This guide provides details on setting up a Grafana dashboard on Red Hat OpenShift to ingest NVIDIA DCGM metrics via Prometheus using the Grafana Operator.
 
 NVIDIA Data Center GPU Manager (DCGM) is a suite of tools that enables monitoring and management of NVIDIA GPUs in data center environments. It provides valuable insights into GPU performance, including utilization, memory consumption, and power usage.
 
@@ -13,7 +13,7 @@ Prometheus is an open-source monitoring solution that collects and processes met
 
 Grafana is a powerful visualization tool that enables real-time monitoring of metrics. When running GPU workloads on Red Hat OpenShift, it is critical to monitor NVIDIA GPU metrics to ensure optimal performance. Grafana allows users to create interactive and real-time dashboards. By integrating Prometheus with Grafana, we can effectively monitor and analyze NVIDIA GPU performance.
 
-![enter image description here](https://raw.githubusercontent.com/rohitralhan/GPU-Metrics-with-Grafana-OCP/refs/heads/main/images/basic-architecture.png)
+![High Level Architecture](https://raw.githubusercontent.com/rohitralhan/GPU-Metrics-with-Grafana-OCP/refs/heads/main/images/basic-architecture.png)
 <p align=center>High Level Architecture</p>
 
 ## Prerequisites
@@ -69,7 +69,7 @@ oc patch clusterpolicies.nvidia.com gpu-cluster-policy --patch '{ "spec": { "dcg
 4. Run `oc get pods -n nvidia-gpu-operator` make sure the DCGM pods are up and running
 Sample Output
 
-![enter image description here](https://raw.githubusercontent.com/rohitralhan/GPU-Metrics-with-Grafana-OCP/refs/heads/main/images/dcgm-pods.png)
+![Sample Output](https://raw.githubusercontent.com/rohitralhan/GPU-Metrics-with-Grafana-OCP/refs/heads/main/images/dcgm-pods.png)
 
 ## Step 2: Deploy and Configure the Grafana Operator
 
@@ -79,7 +79,7 @@ Sample Output
  3. Select the `grafana-dashboard` project we created above from the  Project list where the Prometheus operator will be installed.
  4. In the left panel, navigate to  **Operators --> OperatorHub.**
  5. To find the Grafana operator, enter the search term “grafana”, and click Grafana Operator provided by Red Hat, which is a community operator.
- ![enter image description here](https://raw.githubusercontent.com/rohitralhan/GPU-Metrics-with-Grafana-OCP/refs/heads/main/images/grafana-operator.png)
+ ![Grafana Operator Install](https://raw.githubusercontent.com/rohitralhan/GPU-Metrics-with-Grafana-OCP/refs/heads/main/images/grafana-operator.png)
  
 6.  Verify the Grafana Operator is running:
     `oc get pods -n grafana-dashboard`
@@ -232,16 +232,16 @@ Assuming that Prometheus is installed in the **`openshift-monitoring`** namespac
 
 If everything goes well the dashboard should look like as shown below in the screenshot:
 
-![enter image description here](https://raw.githubusercontent.com/rohitralhan/GPU-Metrics-with-Grafana-OCP/refs/heads/main/images/grafana-dashboard.png)
+![Sample Grafana Dashboard](https://raw.githubusercontent.com/rohitralhan/GPU-Metrics-with-Grafana-OCP/refs/heads/main/images/grafana-dashboard.png)
 
 
 ## Step 5: Generating a load
 Now we need to run some GPU workloads. For this purpose, DCGM includes a CUDA load generator called **`dcgmproftester`**. It can be used to generate deterministic CUDA workloads for reading and validating GPU metrics.
 1. Go to **`Workloads --> Pods`** the **`nvidia-gpu-operator`** namespace
 2. Click on the **`nvidia-dcgm-*****`** pod and navigate to the **`Terminal`** tab.
-3. Run the command **`/usr/bin/dcgmproftester12 --no-dcgm-validation -t 1004 -d 40`**. `-t` is a comma-separated list of profiling fields and`-d` is the duration of the test.
+3. Run the command **`/usr/bin/dcgmproftester12 --no-dcgm-validation -t 1004 -d 60`**. `-t` is a comma-separated list of profiling fields and`-d` is the duration of the test.
 
-![enter image description here](https://raw.githubusercontent.com/rohitralhan/GPU-Metrics-with-Grafana-OCP/refs/heads/main/images/dcgmproftester12.png)
+![Load Generation Output](https://raw.githubusercontent.com/rohitralhan/GPU-Metrics-with-Grafana-OCP/refs/heads/main/images/dcgmproftester12.png)
 
 ## Conclusion
 
