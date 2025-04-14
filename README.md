@@ -223,7 +223,7 @@ Assuming that Prometheus is installed in the **`openshift-monitoring`** namespac
     oc apply -f grafana-dashboard.yaml
     ```
     
-4.  Verify that the dashboard appears in Grafana using the below command to get the Grafana UI url
+4.  Verify that the dashboard appears in Grafana using the below command to get the Grafana UI url (default user/password - root/start)
     ```
     oc get routes grafana-a-route -o jsonpath='{"https://"}{.spec.host}{"\n"}' -n grafana-dashboard
 	```
@@ -232,6 +232,7 @@ If everything goes well the dashboard should look like as shown below in the scr
 
 ![Sample Grafana Dashboard](https://raw.githubusercontent.com/rohitralhan/GPU-Metrics-with-Grafana-OCP/refs/heads/main/images/grafana-dashboard.png)
 
+Note: You might have to update the promretheus queries based on your environment, number of GPU nodes, GPU layout etc. 
 
 ## Step 5: Generating a load
 Now we need to run some GPU workloads. For this purpose, DCGM includes a CUDA load generator called **`dcgmproftester`**. It can be used to generate deterministic CUDA workloads for reading and validating GPU metrics.
