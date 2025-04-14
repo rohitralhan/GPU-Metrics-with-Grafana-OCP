@@ -94,7 +94,7 @@ Sample Output
 ## Step 3: Deploy the Grafana Instance
 
 1. Login to OpenShift using OC cli tool 
-2. Create a `Grafana Instance` custom resource (CR):
+2. Create a `grafana-instance.yaml` custom resource defination (CRD) file for creating a grafana instance:
     
     ```
 	apiVersion: grafana.integreatly.org/v1beta1
@@ -131,15 +131,13 @@ Sample Output
 
 1. Before we create the datasource we need to setup a secret in the **`grafana-dashboard`** namespace that will hold the token for connecting to Prometheus, the Prometheus URL and the Prometheus certificate.
 ```
-oc create secret generic prometheus-secret --from-literal=prometheus_token=
-"$(oc create token prometheus-k8s -n openshift-monitoring --duration=8760h)" 
---from-literal=ca.crt="$(oc get secret prometheus-k8s-tls -n openshift-monitoring -o jsonpath="{.data['tls\.crt']}" | base64 -d)" --from-literal=prometheus-svc-
-url="https://prometheus-k8s.openshift-monitoring.svc.cluster.local:9091" -n 
-grafana-dashboard
+oc create secret generic prometheus-secret --from-literal=prometheus_token="$(oc create token prometheus-k8s -n openshift-monitoring --duration=8760h)" \
+--from-literal=ca.crt="$(oc get secret prometheus-k8s-tls -n openshift-monitoring -o jsonpath="{.data['tls\.crt']}" | base64 -d)" \
+--from-literal=prometheus-svc-url="https://prometheus-k8s.openshift-monitoring.svc.cluster.local:9091" -n grafana-dashboard
 ```
 Assuming that Prometheus is installed in the **`openshift-monitoring`** namespace. The secret will be created in the **`grafana-dashboard`** namespace. The token has a validity of 1 year.
 
-3. Create a `GrafanaDataSource` CR to connect Grafana to Prometheus:
+3. Create a `grafana-datasource.yaml` custom resource defination (CRD) file to connect Grafana with Prometheus:
     
     ```
 	apiVersion: grafana.integreatly.org/v1beta1
@@ -163,7 +161,7 @@ Assuming that Prometheus is installed in the **`openshift-monitoring`** namespac
 	      httpHeaderValue1: 'Bearer ${prometheus_token}'
 	      tlsCACert: '${ca.crt}'
 	    type: prometheus
-	    url: '${prometheus_svc_url}'
+	    url: '${prometheus-svc-url}'
 	  instanceSelector:
 	    matchLabels:
 	      dashboards: grafana-a
@@ -182,7 +180,7 @@ Assuming that Prometheus is installed in the **`openshift-monitoring`** namespac
 	    - targetPath: url
 	      valueFrom:
 	        secretKeyRef:
-	          key: prometheus_svc_url
+	          key: prometheus-svc-url
 	          name: prometheus-secret
     ```
     
@@ -201,14 +199,14 @@ Assuming that Prometheus is installed in the **`openshift-monitoring`** namespac
 	```
 	oc apply -f https://raw.githubusercontent.com/rohitralhan/GPU-Metrics-with-Grafana-OCP/refs/heads/main/grafana-dashboard-configmap.yaml
 	```
-3. Create a `GrafanaDashboard` CR:
+3. Create a `grafana-dashboard.yaml` custom resource defination (CRD) file for creating a grafana dashboard instance:
     
     ```
 	kind: GrafanaDashboard
 	apiVersion: grafana.integreatly.org/v1beta1
 	metadata:
 	  name: grafana-nvidia-dashboard
-	  namespace: grafana-operator
+	  namespace: grafana-dashboard
 	spec:
 	  folder: Nvidia-Dcgm-Metrics
 	  instanceSelector:
