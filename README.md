@@ -76,12 +76,17 @@ Sample Output
  1.  Create a namespace for Grafana if not already available:
     `oc create namespace grafana-dashboard` 
  2. Log in to the OpenShift Container Platform (OCP) by using the OpenShift administrator credentials.
- 3. Select the `grafana-dashboard` project we created above from the  Project list where the Grafana operator will be installed.
+ 3. Select the `grafana-dashboard` project we created above from the Project list where the Grafana operator will be installed.
  4. In the left panel, navigate to  **Operators --> OperatorHub.**
- 5. To find the Grafana operator, enter the search term “grafana”, and click Grafana Operator provided by Red Hat, which is a community operator.
+ 5. To find the Grafana operator, enter the search term “grafana”, and click Grafana Operator provided by Grafana Labs, which is a community operator.
+	- Under `Installation Mode` select `A specific namespace on the cluster`
+ 	- In the `Installed Namespace` select `grafana-dashboard`
+  	- Click `Install`
+ 
+   
  ![Grafana Operator Install](https://raw.githubusercontent.com/rohitralhan/GPU-Metrics-with-Grafana-OCP/refs/heads/main/images/grafana-operator.png)
  
-6.  Verify the Grafana Operator is running:
+7.  Verify the Grafana Operator is running:
     `oc get pods -n grafana-dashboard`
 	Output
 	```
@@ -223,7 +228,7 @@ Assuming that Prometheus is installed in the **`openshift-monitoring`** namespac
     oc apply -f grafana-dashboard.yaml
     ```
     
-4.  Verify that the dashboard appears in Grafana, use the below command to get the Grafana UI url (default user/password - root/start)
+4.  Verify that the dashboard appears in Grafana, use the below command to get the Grafana UI url
     ```
     oc get routes grafana-a-route -o jsonpath='{"https://"}{.spec.host}{"\n"}' -n grafana-dashboard
 	```
@@ -240,7 +245,7 @@ Note: You might have to update the promretheus queries based on your environment
 Now we need to run some GPU workloads. For this purpose, DCGM includes a CUDA load generator called **`dcgmproftester`**. It can be used to generate deterministic CUDA workloads for reading and validating GPU metrics.
 1. Go to **`Workloads --> Pods`** the **`nvidia-gpu-operator`** namespace
 2. Click on any one of the **`nvidia-dcgm-*****`** pod and navigate to the **`Terminal`** tab
-3. Run the command **`/usr/bin/dcgmproftester12 --no-dcgm-validation -t 1004 -d 60`**
+3. Run the command - **`/usr/bin/dcgmproftester12 --no-dcgm-validation -t 1004 -d 60`**
    - `-t` is a comma-separated list of profiling fields
    - `-d` is the duration of the test
 
