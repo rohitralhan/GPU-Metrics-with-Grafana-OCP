@@ -76,7 +76,7 @@ Sample Output
  1.  Create a namespace for Grafana if not already available:
     `oc create namespace grafana-dashboard` 
  2. Log in to the OpenShift Container Platform (OCP) by using the OpenShift administrator credentials.
- 3. Select the `grafana-dashboard` project we created above from the  Project list where the Prometheus operator will be installed.
+ 3. Select the `grafana-dashboard` project we created above from the  Project list where the Grafana operator will be installed.
  4. In the left panel, navigate to  **Operators --> OperatorHub.**
  5. To find the Grafana operator, enter the search term “grafana”, and click Grafana Operator provided by Red Hat, which is a community operator.
  ![Grafana Operator Install](https://raw.githubusercontent.com/rohitralhan/GPU-Metrics-with-Grafana-OCP/refs/heads/main/images/grafana-operator.png)
