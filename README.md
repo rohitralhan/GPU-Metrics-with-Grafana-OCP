@@ -193,7 +193,7 @@ Assuming that Prometheus is installed in the **`openshift-monitoring`** namespac
 4.  Verify that the data source is available in Grafana.
     
 
-## Step 5: Deploy the Grafana Dashboard for DCGM Metrics
+## Step 5: Deploy the Grafana Dashboard for visualizing DCGM Metrics
 
 1. Deploy the `configmap` holding the Grafana dashboard json file using the below command:
 	```
