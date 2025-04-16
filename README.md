@@ -223,7 +223,7 @@ Assuming that Prometheus is installed in the **`openshift-monitoring`** namespac
     oc apply -f grafana-dashboard.yaml
     ```
     
-4.  Verify that the dashboard appears in Grafana using the below command to get the Grafana UI url (default user/password - root/start)
+4.  Verify that the dashboard appears in Grafana, use the below command to get the Grafana UI url (default user/password - root/start)
     ```
     oc get routes grafana-a-route -o jsonpath='{"https://"}{.spec.host}{"\n"}' -n grafana-dashboard
 	```
