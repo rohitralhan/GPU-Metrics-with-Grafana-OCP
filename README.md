@@ -231,10 +231,11 @@ Assuming that Prometheus is installed in the **`openshift-monitoring`** namespac
 4.  Verify that the dashboard appears in Grafana, use the below command to get the Grafana UI url
     ```
     oc get routes grafana-a-route -o jsonpath='{"https://"}{.spec.host}{"\n"}' -n grafana-dashboard
-	```
-
-```Use the default user & password - root/start to login to the Grafana Dashboard```
-
+    ```
+    ```
+    Grafana Dashboard user & password - root/start
+    ```
+    
 If everything goes well the dashboard should look like as shown below in the screenshot:
 
 ![Sample Grafana Dashboard](https://raw.githubusercontent.com/rohitralhan/GPU-Metrics-with-Grafana-OCP/refs/heads/main/images/grafana-dashboard.png)
