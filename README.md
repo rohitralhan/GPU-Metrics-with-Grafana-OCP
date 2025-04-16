@@ -129,7 +129,7 @@ Sample Output
 
 ## Step 4: Configure the Prometheus Data Source in Grafana
 
-1. Before we create the datasource we need to setup a secret in the **`grafana-dashboard`** namespace that will hold the token for connecting to Prometheus, the Prometheus URL and the Prometheus certificate.
+1. Before we create the datasource we need to setup a secret in the **`grafana-dashboard`** namespace that will hold the token, Prometheus URL and the Prometheus certificate for connecting to Prometheus.
 ```
 oc create secret generic prometheus-secret --from-literal=prometheus_token="$(oc create token prometheus-k8s -n openshift-monitoring --duration=8760h)" \
 --from-literal=ca.crt="$(oc get secret prometheus-k8s-tls -n openshift-monitoring -o jsonpath="{.data['tls\.crt']}" | base64 -d)" \
